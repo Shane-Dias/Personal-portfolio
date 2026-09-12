@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Braces,
@@ -64,9 +64,31 @@ const itemVariants = {
   visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20 } },
 };
 
+/** Read a CSS custom property from :root as a live string */
+function useCssVar(name) {
+  const get = () =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const [value, setValue] = useState(get);
+  useEffect(() => {
+    // Re-read whenever the html class changes (theme toggle)
+    const observer = new MutationObserver(() => setValue(get()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, [name]);
+  return value;
+}
+
 export default function Skills() {
   const [active, setActive] = useState(stack[0].group);
   const [hoveredNode, setHoveredNode] = useState(null);
+
+  // Live theme-aware colours for SVG (can't use Tailwind classes inside SVG attrs)
+  const colorCyan    = useCssVar("--color-cyan");
+  const colorEdge    = useCssVar("--color-edge");
+  const colorEdgeSoft = useCssVar("--color-edge-soft");
 
   const activeGroup = stack.find((g) => g.group === active);
   const totalTools = stack.reduce((acc, g) => acc + g.items.length, 0);
@@ -128,7 +150,7 @@ export default function Skills() {
               cy={CY}
               r={RADIUS}
               fill="none"
-              stroke="#1b1f2a"
+              stroke={colorEdgeSoft}
               strokeWidth="1"
               strokeDasharray="4 6"
             />
@@ -137,6 +159,11 @@ export default function Skills() {
             {nodes.map((node) => {
               const isActive = active === node.group;
               const isHovered = hoveredNode === node.group;
+              const stroke = isActive
+                ? colorCyan
+                : isHovered
+                ? `${colorCyan}80`
+                : colorEdge;
               return (
                 <motion.line
                   key={node.group}
@@ -144,12 +171,9 @@ export default function Skills() {
                   y1={CY}
                   x2={node.x}
                   y2={node.y}
-                  stroke={isActive ? "#52e0c4" : isHovered ? "#52e0c480" : "#262b38"}
+                  stroke={stroke}
                   strokeWidth={isActive ? 1.5 : 1}
-                  animate={{
-                    stroke: isActive ? "#52e0c4" : isHovered ? "#52e0c480" : "#262b38",
-                    strokeWidth: isActive ? 1.5 : 1,
-                  }}
+                  animate={{ stroke, strokeWidth: isActive ? 1.5 : 1 }}
                   transition={{ duration: 0.25 }}
                 />
               );
@@ -181,7 +205,7 @@ export default function Skills() {
                 whileTap={{ scale: 0.94 }}
                 animate={{
                   boxShadow: isActive
-                    ? "0 0 24px -4px #52e0c455"
+                    ? `0 0 24px -4px ${colorCyan}55`
                     : "0 0 0px 0px transparent",
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 20 }}

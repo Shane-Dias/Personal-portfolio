@@ -8,23 +8,69 @@
 @import "@fontsource/jetbrains-mono/latin-400.css";
 @import "@fontsource/jetbrains-mono/latin-500.css";
 
-@theme {
-  --color-void: #0a0c11;
-  --color-panel: #12151d;
-  --color-panel-2: #181c26;
-  --color-edge: #262b38;
-  --color-edge-soft: #1b1f2a;
-  --color-fg: #eceef1;
-  --color-fg-dim: #8b93a3;
-  --color-cyan: #52e0c4;
-  --color-cyan-dim: #52e0c433;
-  --color-amber: #ffb454;
-  --color-red: #ff5d5d;
+/* ── Design tokens ─────────────────────────────────────────── */
+/* Dark mode (default) */
+:root {
+  --color-void:       #0a0c11;
+  --color-panel:      #12151d;
+  --color-panel-2:    #181c26;
+  --color-edge:       #262b38;
+  --color-edge-soft:  #1b1f2a;
+  --color-fg:         #eceef1;
+  --color-fg-dim:     #8b93a3;
+  --color-cyan:       #52e0c4;
+  --color-cyan-dim:   #52e0c433;
+  --color-amber:      #ffb454;
+  --color-red:        #ff5d5d;
 
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* grain opacity */
+  --grain-opacity: 0.035;
 }
 
+/* Light mode overrides
+   Palette logic:
+   void      = page canvas  → mid slate-grey so cards lift off it
+   panel     = card surface → white, clearly above void
+   panel-2   = sunken inset → slightly off-white, below panel
+   edge      = visible border → strong enough to separate cards
+   edge-soft = subtle divider → used for section separators
+   fg        = near-black body text
+   fg-dim    = medium-contrast secondary text (AA compliant on panel)
+*/
+html.light {
+  --color-void:       #dde1e9;   /* page bg: cool slate — cards pop off this */
+  --color-panel:      #f8f9fb;   /* card surface: near-white */
+  --color-panel-2:    #edf0f4;   /* sunken/inset surface: darker than panel */
+  --color-edge:       #b0b8c8;   /* border: clearly visible */
+  --color-edge-soft:  #cdd2dc;   /* subtle divider */
+  --color-fg:         #0d1117;   /* heading & body text: near-black */
+  --color-fg-dim:     #3d4757;   /* secondary text: dark enough for contrast */
+  --color-cyan:       #0891b2;   /* teal-blue accent — readable on light bg */
+  --color-cyan-dim:   #0891b233;
+  --color-amber:      #b45309;   /* amber darkened for contrast */
+  --color-red:        #b91c1c;   /* red darkened for contrast */
+
+  --grain-opacity: 0.025;
+}
+
+@theme {
+  --color-void:      var(--color-void);
+  --color-panel:     var(--color-panel);
+  --color-panel-2:   var(--color-panel-2);
+  --color-edge:      var(--color-edge);
+  --color-edge-soft: var(--color-edge-soft);
+  --color-fg:        var(--color-fg);
+  --color-fg-dim:    var(--color-fg-dim);
+  --color-cyan:      var(--color-cyan);
+  --color-cyan-dim:  var(--color-cyan-dim);
+  --color-amber:     var(--color-amber);
+  --color-red:       var(--color-red);
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
@@ -33,6 +79,23 @@ body {
   background-color: var(--color-void);
   color: var(--color-fg);
   font-family: var(--font-display);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth token transitions so the toggle doesn't feel jarring */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+/* But don't let the global transition fight with animation libraries */
+.notransition,
+.notransition *,
+[data-framer-motion] {
+  transition: none !important;
 }
 
 ::selection {
@@ -44,7 +107,7 @@ body {
   text-wrap: balance;
 }
 
-/* custom cursor support: hide native cursor on interactive desktop only */
+/* custom cursor support */
 @media (hover: hover) and (pointer: fine) {
   .cursor-enabled,
   .cursor-enabled a,
@@ -62,9 +125,28 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 60;
-  opacity: 0.035;
+  opacity: var(--grain-opacity);
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Light mode: flip grain blend to multiply for better visibility on white */
+html.light .grain {
+  mix-blend-mode: multiply;
+}
+
+/*
+  In light mode, semi-transparent panel backgrounds (bg-panel/35, /45, /60)
+  let the grey page bleed through, making cards look grey rather than white.
+  Force card-like elements to a solid surface in light mode.
+*/
+html.light [class*="bg-panel/"] {
+  background-color: var(--color-panel) !important;
+}
+
+/* Nav frosted glass — keep a subtle tint rather than forcing solid */
+html.light header[class*="backdrop-blur"] {
+  background-color: color-mix(in srgb, var(--color-panel) 88%, transparent) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,7 +167,7 @@ body {
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  50%       { opacity: 0.35; }
 }
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;

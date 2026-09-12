@@ -88,7 +88,7 @@ export default function Achievements() {
                 {/* subtle top-left gradient accent */}
                 <div
                   className="pointer-events-none absolute -top-10 -left-10 w-36 h-36 rounded-full opacity-[0.06]"
-                  style={{ background: i % 2 === 0 ? "#ffb454" : "#8b93a3" }}
+                  style={{ background: i % 2 === 0 ? "var(--color-amber)" : "var(--color-fg-dim)" }}
                   aria-hidden="true"
                 />
 

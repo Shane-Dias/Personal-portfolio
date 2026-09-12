@@ -34,7 +34,7 @@ export default function Hero() {
       {/* subtle radial glow behind the name */}
       <div
         className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.04]"
-        style={{ background: "radial-gradient(circle, #52e0c4 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, var(--color-cyan) 0%, transparent 70%)" }}
         aria-hidden="true"
       />
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Github, Linkedin, Menu, X } from "lucide-react";
+import { Github, Linkedin, Menu, Moon, Sun, X } from "lucide-react";
 import { profile } from "../data/content";
+import { useTheme } from "../context/ThemeContext";
 
 const sections = [
   { id: "hero",        label: "index" },
@@ -12,12 +13,37 @@ const sections = [
   { id: "contact",     label: "contact" },
 ];
 
-export default function Nav() {
-  const [active, setActive] = useState("hero");
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+function ThemeToggle({ className = "" }) {
+  const { theme, toggle } = useTheme();
+  const isDark = theme === "dark";
+  return (
+    <button
+      onClick={toggle}
+      data-cursor-hover
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className={`relative w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors ${className}`}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isDark ? "moon" : "sun"}
+          initial={{ opacity: 0, rotate: -30, scale: 0.7 }}
+          animate={{ opacity: 1, rotate: 0,   scale: 1 }}
+          exit={{    opacity: 0, rotate:  30, scale: 0.7 }}
+          transition={{ duration: 0.18 }}
+          className="absolute"
+        >
+          {isDark ? <Moon size={14} /> : <Sun size={14} />}
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+}
 
-  // active section via IntersectionObserver
+export default function Nav() {
+  const [active,   setActive]   = useState("hero");
+  const [scrolled, setScrolled] = useState(false);
+  const [open,     setOpen]     = useState(false);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -32,14 +58,12 @@ export default function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  // frosted glass trigger
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -65,22 +89,24 @@ export default function Nav() {
           <span className="tracking-wide">Shane Dias</span>
         </a>
 
-        {/* desktop: status + social */}
-        <div className="hidden sm:flex items-center gap-5 text-fg-dim">
+        {/* desktop: status + toggle + social */}
+        <div className="hidden sm:flex items-center gap-4 text-fg-dim">
           <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan pulse-dot" aria-hidden="true" />
             system online
           </span>
-          <div className="flex items-center gap-3 border-l border-edge-soft pl-4">
+
+          <div className="flex items-center gap-2 border-l border-edge-soft pl-4">
+            <ThemeToggle />
             <a
               href={profile.github}
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub profile"
               data-cursor-hover
-              className="hover:text-cyan transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"
             >
-              <Github size={15} />
+              <Github size={14} />
             </a>
             <a
               href={profile.linkedin}
@@ -88,22 +114,25 @@ export default function Nav() {
               rel="noreferrer"
               aria-label="LinkedIn profile"
               data-cursor-hover
-              className="hover:text-cyan transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"
             >
-              <Linkedin size={15} />
+              <Linkedin size={14} />
             </a>
           </div>
         </div>
 
-        {/* mobile hamburger */}
-        <button
-          className="sm:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-fg hover:border-fg-dim transition-colors"
-          onClick={() => setOpen(true)}
-          aria-label="Open navigation menu"
-          data-cursor-hover
-        >
-          <Menu size={16} />
-        </button>
+        {/* mobile: theme toggle + hamburger */}
+        <div className="sm:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-fg hover:border-fg-dim transition-colors"
+            onClick={() => setOpen(true)}
+            aria-label="Open navigation menu"
+            data-cursor-hover
+          >
+            <Menu size={16} />
+          </button>
+        </div>
       </header>
 
       {/* ── vertical dock, desktop ── */}
@@ -122,32 +151,17 @@ export default function Nav() {
               className="group flex items-center gap-3"
             >
               <motion.span
-                animate={{
-                  opacity: isActive ? 1 : 0,
-                  x: isActive ? 0 : 6,
-                }}
+                animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : 6 }}
                 transition={{ duration: 0.2 }}
-                className="font-mono text-[10px] uppercase tracking-widest text-cyan group-hover:opacity-100 group-hover:translate-x-0"
+                className="font-mono text-[10px] uppercase tracking-widest text-cyan"
               >
                 {s.label}
               </motion.span>
-              {/* also show label on hover even if inactive */}
-              {!isActive && (
-                <motion.span
-                  initial={{ opacity: 0, x: 6 }}
-                  whileHover={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-7 font-mono text-[10px] uppercase tracking-widest text-fg-dim pointer-events-none"
-                  aria-hidden="true"
-                >
-                  {s.label}
-                </motion.span>
-              )}
               <motion.span
                 animate={{
                   width:           isActive ? 10 : 6,
                   height:          isActive ? 10 : 6,
-                  backgroundColor: isActive ? "#52e0c4" : "#8b93a3",
+                  backgroundColor: isActive ? "var(--color-cyan)" : "var(--color-fg-dim)",
                 }}
                 transition={{ duration: 0.2 }}
                 className="block rounded-full"
@@ -156,17 +170,17 @@ export default function Nav() {
           );
         })}
 
-        {/* social links at bottom of dock */}
-        <div className="mt-2 flex flex-col items-end gap-3 border-t border-edge-soft pt-4">
+        <div className="mt-2 flex flex-col items-end gap-2 border-t border-edge-soft pt-4">
+          <ThemeToggle />
           <a
             href={profile.github}
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
             data-cursor-hover
-            className="text-fg-dim hover:text-cyan transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"
           >
-            <Github size={15} />
+            <Github size={14} />
           </a>
           <a
             href={profile.linkedin}
@@ -174,9 +188,9 @@ export default function Nav() {
             rel="noreferrer"
             aria-label="LinkedIn"
             data-cursor-hover
-            className="text-fg-dim hover:text-cyan transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"
           >
-            <Linkedin size={15} />
+            <Linkedin size={14} />
           </a>
         </div>
       </nav>
@@ -192,13 +206,10 @@ export default function Nav() {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 md:hidden"
           >
-            {/* backdrop */}
             <motion.div
               className="absolute inset-0 bg-void/95 backdrop-blur-sm"
               onClick={() => setOpen(false)}
             />
-
-            {/* panel */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -206,7 +217,6 @@ export default function Nav() {
               transition={{ type: "spring", stiffness: 280, damping: 28 }}
               className="absolute right-0 top-0 bottom-0 w-72 bg-panel border-l border-edge flex flex-col"
             >
-              {/* panel header */}
               <div className="flex items-center justify-between h-16 px-6 border-b border-edge-soft">
                 <span className="font-mono text-xs text-fg-dim tracking-wide">navigation</span>
                 <button
@@ -218,7 +228,6 @@ export default function Nav() {
                 </button>
               </div>
 
-              {/* links */}
               <nav className="flex flex-col p-6 gap-1 flex-1">
                 {sections.map((s, i) => (
                   <motion.a
@@ -242,26 +251,10 @@ export default function Nav() {
                 ))}
               </nav>
 
-              {/* social at bottom */}
-              <div className="p-6 border-t border-edge-soft flex items-center gap-4">
-                <a
-                  href={profile.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub"
-                  className="text-fg-dim hover:text-cyan transition-colors"
-                >
-                  <Github size={18} />
-                </a>
-                <a
-                  href={profile.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="LinkedIn"
-                  className="text-fg-dim hover:text-cyan transition-colors"
-                >
-                  <Linkedin size={18} />
-                </a>
+              <div className="p-6 border-t border-edge-soft flex items-center gap-3">
+                <ThemeToggle />
+                <a href={profile.github}   target="_blank" rel="noreferrer" aria-label="GitHub"   className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"><Github   size={14} /></a>
+                <a href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-8 h-8 flex items-center justify-center rounded-lg border border-edge text-fg-dim hover:text-cyan hover:border-cyan/40 transition-colors"><Linkedin size={14} /></a>
               </div>
             </motion.div>
           </motion.div>

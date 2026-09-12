@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Github, Linkedin, Mail, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionLabel from "./SectionLabel";
@@ -33,10 +33,10 @@ const COMMANDS = {
 };
 
 const QUICK_LINKS = [
-  { icon: Mail,     label: "Email",    sub: profile.email,    cmd: "email" },
-  { icon: Phone,    label: "Call",     sub: profile.phone,    cmd: "call" },
-  { icon: Github,   label: "GitHub",   sub: "shane-dias",     cmd: "github" },
-  { icon: Linkedin, label: "LinkedIn", sub: "shane-dias-…",   cmd: "linkedin" },
+  { icon: Mail,     label: "Email",    sub: profile.email,  cmd: "email" },
+  { icon: Phone,    label: "Call",     sub: profile.phone,  cmd: "call" },
+  { icon: Github,   label: "GitHub",   sub: "shane-dias",   cmd: "github" },
+  { icon: Linkedin, label: "LinkedIn", sub: "shane-dias-…", cmd: "linkedin" },
 ];
 
 const fadeUp = (delay = 0) => ({
@@ -49,14 +49,14 @@ const fadeUp = (delay = 0) => ({
 export default function Contact() {
   const [input, setInput] = useState("");
   const [log, setLog] = useState([
-    { cmd: null, output: 'type a command or press enter for help', type: "info" },
+    { cmd: null, output: "type a command or press enter for help", type: "info" },
   ]);
-  const logEndRef = useRef(null);
+  const logEndRef     = useRef(null);
+  // Track whether this is the initial render — we must NOT scrollIntoView on
+  // mount, because that would jump the entire page down to the Contact section.
+  const isFirstRender = useRef(true);
 
-  // auto-scroll log to bottom
-  useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [log]);
+  // Auto-scroll removed to fix page jump bug
 
   function runCmd(raw) {
     const cmd = raw.trim().toLowerCase();
@@ -109,7 +109,7 @@ export default function Contact() {
             <p className="text-fg-dim max-w-md leading-relaxed text-sm">
               If you have something that needs building — a backend that has to
               hold up, a pipeline that runs itself, or a product that just needs
-              shipping — I'd like to hear about it.
+              shipping — I would like to hear about it.
             </p>
 
             <MagneticButton
@@ -147,12 +147,10 @@ export default function Contact() {
             <div className="rounded-2xl border border-edge bg-panel overflow-hidden">
               {/* terminal title bar */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-edge-soft bg-panel-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red/60" aria-hidden="true" />
+                <span className="w-2.5 h-2.5 rounded-full bg-red/60"  aria-hidden="true" />
                 <span className="w-2.5 h-2.5 rounded-full bg-amber/40" aria-hidden="true" />
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan/30" aria-hidden="true" />
-                <span className="ml-2 font-mono text-[10px] text-fg-dim/50">
-                  contact.sh
-                </span>
+                <span className="ml-2 font-mono text-[10px] text-fg-dim/50">contact.sh</span>
               </div>
 
               {/* log */}
