@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@import "@fontsource/bricolage-grotesque/latin-400.css";
+@import "@fontsource/bricolage-grotesque/latin-500.css";
+@import "@fontsource/bricolage-grotesque/latin-600.css";
+@import "@fontsource/bricolage-grotesque/latin-700.css";
+@import "@fontsource/bricolage-grotesque/latin-800.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+
+@theme {
+  --color-void: #0a0c11;
+  --color-panel: #12151d;
+  --color-panel-2: #181c26;
+  --color-edge: #262b38;
+  --color-edge-soft: #1b1f2a;
+  --color-fg: #eceef1;
+  --color-fg-dim: #8b93a3;
+  --color-cyan: #52e0c4;
+  --color-cyan-dim: #52e0c433;
+  --color-amber: #ffb454;
+  --color-red: #ff5d5d;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-fg);
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--color-cyan);
+  color: var(--color-void);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* custom cursor support: hide native cursor on interactive desktop only */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-enabled,
+  .cursor-enabled a,
+  .cursor-enabled button {
+    cursor: none;
+  }
+}
+
+.glow-cyan {
+  box-shadow: 0 0 40px -8px var(--color-cyan-dim);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
