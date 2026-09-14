@@ -39,6 +39,21 @@ export const stack = [
 
 export const projects = [
   {
+    code: "BLD-01",
+    kind: "Web platform",
+    name: "BrightBuilds",
+    stack: "MERN Stack · Render · Vercel · Cloudinary",
+    description:
+      "A centralized project showcase platform connecting students, faculty, and administrators through submission and review workflows.",
+    points: [
+      "Secure JWT-based authentication with role-based authorization across student, faculty and admin roles",
+      "REST APIs for project management, approvals, comments, ratings, likes and notifications",
+      "MongoDB-backed persistence for the full review pipeline",
+    ],
+    repo: "https://github.com/Shane-Dias/BrightBuilds",
+    demo: "https://bright-builds.vercel.app",
+  },
+  {
     code: "BHS-01",
     kind: "Safety platform",
     name: "BharatSecure",
@@ -52,8 +67,8 @@ export const projects = [
       "Interactive heatmap analytics to visualize incident patterns geographically",
       "SOS workflow with location tracking for emergency situations",
     ],
-    repo: "https://github.com/Shane-Dias",
-    demo: "",
+    repo: "https://github.com/Shane-Dias/BharatSecure",
+    demo: "https://bharat-secure.vercel.app",
   },
   {
     code: "TS-01",
@@ -68,23 +83,8 @@ export const projects = [
       "Google Generative AI, mapping, weather, and location APIs for AI-powered recommendations",
       "REST APIs, interactive maps, dashboards, responsive interfaces, authentication, and protected workflows",
     ],
-    repo: "https://github.com/Shane-Dias",
-    demo: "",
-  },
-  {
-    code: "BLD-01",
-    kind: "Web platform",
-    name: "BrightBuilds",
-    stack: "MERN Stack · Render · Vercel · Cloudinary",
-    description:
-      "A centralized project showcase platform connecting students, faculty, and administrators through submission and review workflows.",
-    points: [
-      "Secure JWT-based authentication with role-based authorization across student, faculty and admin roles",
-      "REST APIs for project management, approvals, comments, ratings, likes and notifications",
-      "MongoDB-backed persistence for the full review pipeline",
-    ],
-    repo: "https://github.com/PLACEHOLDER/brightbuilds",
-    demo: "",
+    repo: "https://github.com/Shane-Dias/TravelSafeAI",
+    demo: "https://travel-safe-ai-jqdm.vercel.app/",
   },
   {
     code: "BLD-02",
@@ -98,7 +98,7 @@ export const projects = [
       "Real-time alerts broadcast via SNS on suspicious uploads",
       "Zero-Trust architecture with least-privilege IAM and resource-based bucket policies",
     ],
-    repo: "https://github.com/PLACEHOLDER/cloud-sentry",
+    repo: "https://github.com/Shane-Dias/CCL_MiniProject_Cloud-Sentry",
     demo: "",
   },
   {
@@ -114,7 +114,7 @@ export const projects = [
       "Spring Data JPA persistence layer for relational schemas",
       "Clean integration layer around the Spoonacular external API",
     ],
-    repo: "https://github.com/PLACEHOLDER/recipe-manager",
+    repo: "https://github.com/Shane-Dias/recipe-manager-springboot",
     demo: "",
   },
   {
@@ -134,13 +134,15 @@ export const projects = [
       { value: "14.4%", label: "Champion accounts" },
       { value: "25.2%", label: "revenue from Champions" },
     ],
-    repo: "https://github.com/PLACEHOLDER/retail-pulse",
+    repo: "https://github.com/Shane-Dias/RetailPulse",
     demo: "",
   },
 ];
 
 export const achievements = [
-  { title: "1st Place", event: "Tech-Mania 2K25 Hackathon" },
-  { title: "1st Runner-Up", event: "Oscillation 2K25 Hackathon" },
-  { title: "1st Place", event: "FullStack.AI Hackathon" },
+  { title: "1st Place",     event: "Tech-Mania 2K25 Hackathon",   cert: "https://drive.google.com/file/d/1SQ40EYfNooPG1p7JhDQxa5wy3nYz4zRw/view?usp=sharing" },
+  { title: "1st Runner-Up", event: "Oscillation 2K25 Hackathon",  cert: "https://drive.google.com/file/d/1xQa0FeNplp13VhquwFmYZsOL7Aw5Za4Q/view?usp=sharing" },
+  { title: "1st Place",     event: "FullStack.AI Hackathon",       cert: "https://drive.google.com/file/d/1dd2hYA-5FSSn-l2PTZXw4EWamWSf5z9N/view?usp=sharing" },
+  { title: "1st Place",     event: "Code Storm Hackathon 2025",    cert: "https://drive.google.com/file/d/170J9Y4k0FCiEGF5VwrsAh24d18_Gjbl5/view?usp=sharing" },
+  { title: "3rd Place",     event: "Saksham Ideathon '25",         cert: "https://drive.google.com/file/d/1Na1deGDrPQW2AM34nMfWSpusZnHNbARJ/view?usp=sharing" },
 ];

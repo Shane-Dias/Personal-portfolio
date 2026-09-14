@@ -14,7 +14,7 @@ const fadeUp = (delay = 0) => ({
 const HIGHLIGHTS = [
   { value: "8.94", label: "CGPA / 10" },
   { value: "Sem VII", label: "current" },
-  { value: "3×", label: "hackathon wins" },
+  { value: "5×", label: "hackathon wins" },
 ];
 
 export default function About() {
