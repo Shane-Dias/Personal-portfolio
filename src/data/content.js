@@ -1,4 +1,3 @@
-// EDIT ME: Update links and any fields marked PLACEHOLDER before publishing.
 export const profile = {
   name: "Shane Dias",
   role: "Software Engineer",
